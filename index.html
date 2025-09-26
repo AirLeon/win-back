@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Win-Back Agentic AI Logic Flow</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .flow-diagram {
+            background: #1E293B;
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid #22C55E;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .agentic-label {
+            background: #22C55E;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: 600;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 10;
+        }
+        
+        .flow-container {
+            display: grid;
+            grid-template-columns: repeat(5, 200px);
+            grid-template-rows: repeat(3, auto);
+            gap: 30px;
+            margin-top: 60px;
+            justify-content: center;
+            min-width: 1200px;
+        }
+        
+        .flow-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid #22C55E;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-box:hover {
+            background: rgba(34, 197, 94, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+        }
+        
+        .flow-box.primary {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: #8B5CF6;
+        }
+        
+        .flow-box.primary:hover {
+            background: rgba(139, 92, 246, 0.2);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+        
+        .flow-box.secondary {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: #06B6D4;
+        }
+        
+        .flow-box.secondary:hover {
+            background: rgba(6, 182, 212, 0.2);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+        }
+        
+        .flow-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .flow-title {
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #22C55E;
+        }
+        
+        .flow-box.primary .flow-title {
+            color: #8B5CF6;
+        }
+        
+        .flow-box.secondary .flow-title {
+            color: #06B6D4;
+        }
+        
+        .flow-details {
+            font-size: 0.75em;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
+        
+        /* Grid positioning */
+        .box-1 { grid-column: 1; grid-row: 1; }
+        .box-2 { grid-column: 2; grid-row: 1; }
+        .box-3 { grid-column: 3; grid-row: 1; }
+        .box-4 { grid-column: 4; grid-row: 1; }
+        .box-5 { grid-column: 5; grid-row: 1; }
+        .box-6 { grid-column: 3; grid-row: 2; }
+        .box-7 { grid-column: 4; grid-row: 2; }
+        .box-8 { grid-column: 5; grid-row: 2; }
+        .box-9 { grid-column: 2; grid-row: 3; }
+        .box-10 { grid-column: 3; grid-row: 3; }
+        .box-11 { grid-column: 4; grid-row: 3; }
+        
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            color: #22C55E;
+            font-size: 1.5em;
+            font-weight: bold;
+            z-index: 5;
+        }
+        
+        .arrow-right {
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .arrow-down {
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%) rotate(90deg);
+        }
+        
+        .arrow-up {
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-90deg);
+        }
+        
+        .arrow-left {
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        /* Connection lines */
+        .connection-line {
+            position: absolute;
+            background: #22C55E;
+            opacity: 0.6;
+        }
+        
+        .line-horizontal {
+            height: 2px;
+            width: 30px;
+        }
+        
+        .line-vertical {
+            width: 2px;
+            height: 30px;
+        }
+        
+        /* Special feedback lines */
+        .feedback-line {
+            position: absolute;
+            border: 2px dashed #8B5CF6;
+            border-radius: 10px;
+            opacity: 0.5;
+        }
+        
+        .feedback-1 {
+            top: 350px;
+            left: 650px;
+            width: 400px;
+            height: 180px;
+        }
+        
+        .feedback-2 {
+            top: 520px;
+            left: 250px;
+            width: 200px;
+            height: 100px;
+        }
+        
+        .legend {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #475569;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+        
+        .legend-box.green {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: #22C55E;
+        }
+        
+        .legend-box.purple {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: #8B5CF6;
+        }
+        
+        .legend-box.blue {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: #06B6D4;
+        }
+        
+        .use-case-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .use-case-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6 0%, #22C55E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .use-case-subtitle {
+            font-size: 1.2em;
+            color: #94A3B8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="use-case-header">
+            <h1 class="use-case-title">Win-Back Customer Recovery</h1>
+            <p class="use-case-subtitle">Agentic AI Logic Flow for Telecom Subscriber Reactivation</p>
+        </div>
+        
+        <div class="flow-diagram">
+            <div class="agentic-label">Agentic AI</div>
+            
+            <div class="flow-container">
+                <!-- Row 1: Main Process Flow -->
+                <div class="flow-box primary box-1">
+                    <span class="flow-icon">🎯</span>
+                    <div class="flow-title">Specify Task</div>
+                    <div class="flow-details">Win-Back Customer<br>Reactivation<br>Target: 250-300 leads/day</div>
+                    <div class="arrow arrow-right">→</div>
+                </div>
+                
+                <div class="flow-box box-2">
+                    <span class="flow-icon">🧠</span>
+                    <div class="flow-title">Choose LLM Model</div>
+                    <div class="flow-details">Azure OpenAI GPT-4<br>Google Gemini Pro<br>Anthropic Claude 3.5</div>
+                    <div class="arrow arrow-right">→</div>
+                </div>
+                
+                <div class="flow-box secondary box-3">
+                    <span class="flow-icon">🔧</span>
+                    <div class="flow-title">Integrate Tools & APIs</div>
+                    <div class="flow-details">Salesforce CRM<br>Offer Management<br>Genesis Voice Platform</div>
+                    <div class="arrow arrow-right">→</div>
+                    <div class="arrow arrow-down">→</div>
+                </div>
+                
+                <div class="flow-box box-4">
+                    <span class="flow-icon">📈</span>
+                    <div class="flow-title">External Operation</div>
+                    <div class="flow-details">Voice Calls (Primary)<br>SMS/WhatsApp Backup<br>Multi-Channel Outreach</div>
+                    <div class="arrow arrow-right">→</div>
+                    <div class="arrow arrow-down">→</div>
+                </div>
+                
+                <div class="flow-box primary box-5">
+                    <span class="flow-icon">🔄</span>
+                    <div class="flow-title">Self-Decisions</div>
+                    <div class="flow-details">Real-time Adjustments<br>Sentiment-based Routing<br>Dynamic Scheduling</div>
+                    <div class="arrow arrow-down">→</div>
+                </div>
+                
+                <!-- Row 2: Processing Layer -->
+                <div class="flow-box secondary box-6">
+                    <span class="flow-icon">🔍</span>
+                    <div class="flow-title">Search/APIs</div>
+                    <div class="flow-details">Eligibility Resolver<br>Customer Qualification<br>Pricing Calculator</div>
+                    <div class="arrow arrow-right">→</div>
+                </div>
+                
+                <div class="flow-box box-7">
+                    <span class="flow-icon">⚡</span>
+                    <div class="flow-title">Embed Logic & Iterations</div>
+                    <div class="flow-details">Max Discount: $2 USD<br>3 Call Attempt Limit<br>Business Rules Engine</div>
+                    <div class="arrow arrow-right">→</div>
+                </div>
+                
+                <div class="flow-box primary box-8">
+                    <span class="flow-icon">🎭</span>
+                    <div class="flow-title">Agent-Led Choices</div>
+                    <div class="flow-details">Accept → Activate Service<br>Decline → Counter-Offer<br>Complex → Human Handoff</div>
+                    <div class="arrow arrow-down">→</div>
+                </div>
+                
+                <!-- Row 3: Execution & Learning -->
+                <div class="flow-box secondary box-9">
+                    <span class="flow-icon">📊</span>
+                    <div class="flow-title">Improve & Evolve</div>
+                    <div class="flow-details">Success Analytics<br>Script Optimization<br>Model Fine-Tuning</div>
+                    <div class="arrow arrow-right">→</div>
+                </div>
+                
+                <div class="flow-box box-10">
+                    <span class="flow-icon">🚀</span>
+                    <div class="flow-title">Implement Actions</div>
+                    <div class="flow-details">Contract Generation<br>Service Activation<br>CRM Updates</div>
+                    <div class="arrow arrow-right">→</div>
+                </div>
+                
+                <div class="flow-box primary box-11">
+                    <span class="flow-icon">✅</span>
+                    <div class="flow-title">Self-Decisions</div>
+                    <div class="flow-details">Outcome Evaluation<br>Next Action Planning<br>Continuous Learning</div>
+                </div>
+            </div>
+            
+            <!-- Feedback loops -->
+            <div class="feedback-line feedback-1"></div>
+            <div class="feedback-line feedback-2"></div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box green"></div>
+                <span>Core Operations</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box purple"></div>
+                <span>Decision Points</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box blue"></div>
+                <span>Integration Layer</span>
+            </div>
+            <div class="legend-item">
+                <span style="color: #22C55E;">→</span>
+                <span>Process Flow</span>
+            </div>
+            <div class="legend-item">
+                <span style="color: #8B5CF6;">⋯</span>
+                <span>Feedback Loops</span>
+            </div>
+            <div class="legend-item">
+                <span style="color: #F59E0B;">⚠️</span>
+                <span>$2 Max Discount Constraint</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
